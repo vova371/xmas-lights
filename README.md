@@ -1,16 +1,16 @@
 # scripts
 viriety of helpful scripts
 
-##knigavuhe
+## knigavuhe
 
 A simple python v.3 script which attempts to download audio files from 
 https://knigavuhe.org/
 
-###arguments:
+### arguments:
   --book BOOK  book url
   --path PATH  output directory
 
-###example:
+### example:
 ./knigavuhe.py --book "https://knigavuhe.org/book/evgenijj-onegin" --path ~/Music/EvgeniyOnegin
 
 This comand downloads and parses cover page to find audio files, creates output directory EvgeniyOnegin if it doesn't exist and downloads mp3 audio files with their original names.
