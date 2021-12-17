@@ -33,6 +33,8 @@ I used ubuntu desktop for writing and testing this script with dummy LED class. 
 
 ## example:
 ```
+copy xmas-lights.py to pi home directory -> /home/pi/xmas-lights.py
+
 run command:
 sudo vi /etc/rc.local
 
