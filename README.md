@@ -31,7 +31,7 @@ It should be obvious how to customise the schedule, the pins and the rhymes in t
 
 I used ubuntu desktop for writing and testing this script with dummy LED class. Use systemd and possibly /etc/rc.local to deploy on Raspberry PI.
 
-## example:
+### example:
 ```
 copy xmas-lights.py to pi home directory -> /home/pi/xmas-lights.py
 
