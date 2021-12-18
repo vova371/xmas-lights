@@ -25,11 +25,11 @@ A script to run X-Mas Lights with Raspberry PI and a set of relays connected to 
 
 The scrypt is written with asyncio and gpiozero.
 
-The hardcoded schedule is to activate the lights between 15:00 to 01:00, it's randomised +/- 15min every day. It's set for 3 IO pins 17, 22 and 27. The 17 is always ON as in my setup these lights have their own flashing logic in its power suply. The pin 22 runs a relatively slow random rhyme and pin 27 is my attempt for Jingle Bells.
+The hardcoded schedule is to activate the lights between 15:00 to 01:00, it's randomised +/- 15min every day. It's set for 3 IO pins 17, 22 and 27. The 17 is always ON as in my setup these lights have their own flashing logic in its power suply. The pins 22 and 27 run a relatively slow random rhyme in counter phase. My attempt at Jingle Bells rhyme is provided (free of royalty :).
 
 It should be obvious how to customise the schedule, the pins and the rhymes in the script, so I did not bother with the command line options for this script.
 
-I used ubuntu desktop for writing and testing this script with dummy LED class. Use systemd and possibly /etc/rc.local to deploy on Raspberry PI.
+I used ubuntu desktop for writing and testing this script using mock pin factory. Use systemd and possibly /etc/rc.local to deploy on Raspberry PI.
 
 ### example:
 ```
@@ -47,6 +47,7 @@ save and exit.
 
 run commands:
 sudo systemctl stop rc.local
-sudo systemctl daemon-reload
 sudo systemctl start rc.local
+or
+sudo systemctl restart rc.local
 ```
