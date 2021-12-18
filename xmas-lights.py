@@ -12,48 +12,101 @@ except ImportError:
     print("gpiozero module not available, using dummy LED implementation")
 
     class LED:
-        def __init__(self, num):
-            pass
+        def __init__(self, pin):
+            self.pin = pin
+            self.value = 0
+
         def on(self):
-            pass
+            self.value = 1
+
         def off(self):
-            pass
+            self.value = 0
+
+        def toggle(self):
+            self.value = 0 if self.value else 0
+
+        @property
+        def is_lit(self):
+            return bool(self.value)
 
 log = logging.getLogger("xmas-lights")
 
 class AsyncLED:
-    def __init__(self, num):
-        self.num = num
-        self.led = LED(num)
+    def __init__(self, pin):
+        self.led = LED(pin)
 
     async def on(self, sec):
-        log.info("LED %d ON for %f sec", self.num, sec)
+        log.info("LED %d ON for %f sec", self.led.pin, sec)
         self.led.on()
         await asyncio.sleep(sec)
 
     async def off(self, sec):
-        log.info("LED %d OFF for %f sec", self.num, sec)
+        log.info("LED %d OFF for %f sec", self.led.pin, sec)
         self.led.off()
         await asyncio.sleep(sec)
+
+
+class CounterPhasePair:
+    def __init__(self, a, b):
+        self.led_a = LED(a)
+        self.led_b = LED(b)
+
+    async def on_a(self, sec):
+        log.info("LED %d ON, %d OFF for %f sec", self.led_a.pin, self.led_b.pin, sec)
+        self.led_a.on()
+        self.led_b.off()
+        await asyncio.sleep(sec)
+
+    async def on_b(self, sec):
+        log.info("LED %d ON, %d OFF for %f sec", self.led_b.pin, self.led_a.pin, sec)
+        self.led_a.off()
+        self.led_b.on()
+        await asyncio.sleep(sec)
+
+    async def off(self, sec):
+        log.info("LED %d OFF, %d OFF for %f sec", self.led_a.pin, self.led_b.pin, sec)
+        self.led_a.off()
+        self.led_b.off()
+        await asyncio.sleep(sec)
+
 
 m_sec = 60
 h_sec = 60*60
 
-async def run_led(num, schedule, rhyme):
-    led = AsyncLED(num)
+def check_schedule(schedule):
+    dt = datetime.datetime.now()
+    h = dt.hour + dt.minute / m_sec + dt.second / h_sec
+    return [flag for hour, flag in schedule if hour <= h][-1]
+
+async def scheduled_light(pin, schedule):
+    led = AsyncLED(pin)
 
     while True:
-        dt = datetime.datetime.now()
-        h = dt.hour + dt.minute / m_sec + dt.second / h_sec
-        flag = [flag for hour, flag in schedule if hour <= h][-1]
+        if check_schedule(schedule):
+            await led.on(m_sec)
+        else:
+            await led.off(m_sec)
 
-        if flag:
-            if rhyme is not None:
-                for on_sec, off_sec in rhyme:
-                    await led.on(on_sec)
-                    await led.off(off_sec)
-            else:
-                await led.on(m_sec)
+async def scheduled_rhyme(pin, schedule, rhyme):
+    led = AsyncLED(pin)
+
+    while True:
+        if check_schedule(schedule):
+            for on_sec, off_sec in rhyme:
+                await led.on(on_sec)
+                await led.off(off_sec)
+        else:
+            await led.off(m_sec)
+
+
+async def counter_phase_pair(a, b, schedule, rhyme):
+    led = CounterPhasePair(a, b)
+
+    while True:
+        if check_schedule(schedule):
+            for a_sec, b_sec in rhyme:
+                await led.on_a(a_sec)
+                await led.on_b(b_sec)
         else:
             await led.off(m_sec)
 
@@ -95,10 +148,9 @@ async def main():
     ]
 
     tasks = {
-        asyncio.create_task(run_led(17, schedule, None)),
-        asyncio.create_task(run_led(22, schedule, random_rhyme)),
-        asyncio.create_task(run_led(27, schedule, jingle_bells)),
         asyncio.create_task(randomise(schedule)),
+        asyncio.create_task(scheduled_light(17, schedule)),
+        asyncio.create_task(counter_phase_pair(22, 27, schedule, random_rhyme)),
     }
 
     await asyncio.wait(tasks, return_when=asyncio.FIRST_EXCEPTION)
