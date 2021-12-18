@@ -29,16 +29,25 @@ The hardcoded schedule is to activate the lights between 15:00 to 01:00, it's ra
 
 It should be obvious how to customise the schedule, the pins and the rhymes in the script, so I did not bother with the command line options for this script.
 
-I used ubuntu desktop for writing and testing this script using mock pin factory. Use systemd and possibly /etc/rc.local to deploy on Raspberry PI.
+The logfile is created in the same directory as the running script with name xmas-lights.log.
 
-### example:
+### Tip 1
+Use mock pin factory for testing xmas-lights.py script on machine without IO pins.
+
+```
+GPIOZERO_PIN_FACTORY=mock xmas-lights.py
+```
+
+### Tip 2
+Use systemd and optionally /etc/rc.local to deploy on Raspberry PI.
+
 ```
 copy xmas-lights.py to pi home directory -> /home/pi/xmas-lights.py
 
 run command:
 sudo vi /etc/rc.local
 
-add 2 lines somewhere close to the end of the file but before exit 0 line.
+add 2 lines somewhere close to the end of the file but before exit command.
 
 echo "Switch-on X-Mas Lights"
 /home/pi/xmas-lights.py &
@@ -46,8 +55,5 @@ echo "Switch-on X-Mas Lights"
 save and exit.
 
 run commands:
-sudo systemctl stop rc.local
-sudo systemctl start rc.local
-or
 sudo systemctl restart rc.local
 ```
