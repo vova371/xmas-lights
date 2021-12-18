@@ -6,65 +6,58 @@ import numpy as np
 import datetime
 import logging
 
-try:
-    from gpiozero import LED
-except ImportError:
-    print("gpiozero module not available, using dummy LED implementation")
+from gpiozero import LED
 
-    class LED:
-        def __init__(self, pin):
-            self.pin = pin
-            self.value = 0
-
-        def on(self):
-            self.value = 1
-
-        def off(self):
-            self.value = 0
-
-        def toggle(self):
-            self.value = 0 if self.value else 0
-
-        @property
-        def is_lit(self):
-            return bool(self.value)
 
 log = logging.getLogger("xmas-lights")
 
+
 class AsyncLED:
-    def __init__(self, pin):
-        self.led = LED(pin)
+    def __init__(self, num):
+        self.led = LED(num)
+
+    @property
+    def num(self):
+        return self.led.pin.number
 
     async def on(self, sec):
-        log.info("LED %d ON for %f sec", self.led.pin, sec)
+        log.info("LED %d ON for %f sec", self.num, sec)
         self.led.on()
         await asyncio.sleep(sec)
 
     async def off(self, sec):
-        log.info("LED %d OFF for %f sec", self.led.pin, sec)
+        log.info("LED %d OFF for %f sec", self.num, sec)
         self.led.off()
         await asyncio.sleep(sec)
 
 
 class CounterPhasePair:
-    def __init__(self, a, b):
-        self.led_a = LED(a)
-        self.led_b = LED(b)
+    def __init__(self, num_a, num_b):
+        self.led_a = LED(num_a)
+        self.led_b = LED(num_b)
+
+    @property
+    def num_a(self):
+        return self.led_a.pin.number
+
+    @property
+    def num_b(self):
+        return self.led_b.pin.number
 
     async def on_a(self, sec):
-        log.info("LED %d ON, %d OFF for %f sec", self.led_a.pin, self.led_b.pin, sec)
+        log.info("LED %d ON, %d OFF for %f sec", self.num_a, self.num_b, sec)
         self.led_a.on()
         self.led_b.off()
         await asyncio.sleep(sec)
 
     async def on_b(self, sec):
-        log.info("LED %d ON, %d OFF for %f sec", self.led_b.pin, self.led_a.pin, sec)
+        log.info("LED %d ON, %d OFF for %f sec", self.num_b, self.num_a, sec)
         self.led_a.off()
         self.led_b.on()
         await asyncio.sleep(sec)
 
     async def off(self, sec):
-        log.info("LED %d OFF, %d OFF for %f sec", self.led_a.pin, self.led_b.pin, sec)
+        log.info("LED %d OFF, %d OFF for %f sec", self.num_a, self.num_b, sec)
         self.led_a.off()
         self.led_b.off()
         await asyncio.sleep(sec)
@@ -120,6 +113,7 @@ async def randomise(schedule):
             schedule[i+1][0] = shifted[i]
         log.info("randomised schedule: %s", schedule)
         await asyncio.sleep(h_sec * 24)
+
 
 async def main():
     logging.basicConfig(
