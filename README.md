@@ -1,6 +1,6 @@
 # xmas-lights
 
-A script to run X-Mas Lights with Raspberry PI and a set of relays connected to IO pins.
+A script to run X-Mas Lights with Raspberry PI and 5V Four-Channel Relay Module.
 
 The scrypt is written with asyncio and gpiozero.
 
