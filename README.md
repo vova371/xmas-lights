@@ -39,18 +39,21 @@ sudo systemctl restart rc.local
 
 Raspberry PI  ->  5V Four-Channel Relay Module
 
-Pin Name      Pin 	Colour
-2 	5V power  VCC 	Red
-6 	Ground		GND 	Black
-11	GPIO 17   IN1 	Orange
-13	GPIO 27   IN2 	Yellow
-15	GPIO 22 	IN3 	Green
+| Pin | Name   | Pin | Colour |
+|-----|--------|-----|--------|
+|2    |5V power|VCC  | Red    |
+|6    |Ground	 |GND  | Black  |
+|11   |GPIO 17 |IN1  | Orange |
+|13   |GPIO 27 |IN2  | Yellow |
+|15   |GPIO 22 |IN3  | Green  |
 
 Normally Closed (NC) 240V Relay Connections
 
-Relay 1 - Schedulled ON/OFF - Rainfall & Wreath
-Relay 2 - Schedulled Random Counterphase - Snowflake
-Relay 3 - Schedulled Random Main phase - Bells
+| Connection | Description                    | Usage             |
+|------------|--------------------------------|-------------------|
+| Relay 1    | Schedulled ON/OFF              | Rainfall & Wreath |
+| Relay 2    | Schedulled Random Counterphase | Snowflake         |
+| Relay 3    | Schedulled Random Main phase   | Bells             |
 
 
 https://components101.com/switches/5v-four-channel-relay-module-pinout-features-applications-working-datasheet
