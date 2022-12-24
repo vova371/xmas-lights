@@ -1,25 +1,4 @@
-# scripts
-viriety of helpful scripts
-
-## knigavuhe
-
-A simple python v.3 script which attempts to download audio files from 
-https://knigavuhe.org/
-
-### arguments:
--  --book __BOOK__  _book url_
--  --path __PATH__  _output directory_
-
-### example:
-```
-./knigavuhe.py --book "https://knigavuhe.org/book/evgenijj-onegin" --path ~/Music/EvgeniyOnegin
-```
-This comand downloads and parses cover page to find audio files, creates output directory EvgeniyOnegin if it doesn't exist and downloads mp3 audio files with their original names.
-
-This script might fail for some books, particularly those referenced to litres. I might improve it when/if it becomes necesary for my personal needs. Otherwise feel free to use it at your own risk and contribute with pull requests or suggestions as you wish.
-
-
-## xmas-lights
+# xmas-lights
 
 A script to run X-Mas Lights with Raspberry PI and a set of relays connected to IO pins.
 
@@ -47,7 +26,7 @@ copy xmas-lights.py to pi home directory -> /home/pi/xmas-lights.py
 run command:
 sudo vi /etc/rc.local
 
-add 2 lines somewhere close to the end of the file but before exit command.
+add 2 lines somewhere close to the end of the file but before the exit command.
 
 echo "Switch-on X-Mas Lights"
 /home/pi/xmas-lights.py &
@@ -57,3 +36,22 @@ save and exit.
 run commands:
 sudo systemctl restart rc.local
 ```
+
+Raspberry PI  ->  5V Four-Channel Relay Module
+
+Pin Name      Pin 	Colour
+2 	5V power  VCC 	Red
+6 	Ground		GND 	Black
+11	GPIO 17   IN1 	Orange
+13	GPIO 27   IN2 	Yellow
+15	GPIO 22 	IN3 	Green
+
+Normally Closed (NC) 240V Relay Connections
+
+Relay 1 - Schedulled ON/OFF - Rainfall & Wreath
+Relay 2 - Schedulled Random Counterphase - Snowflake
+Relay 3 - Schedulled Random Main phase - Bells
+
+
+https://components101.com/switches/5v-four-channel-relay-module-pinout-features-applications-working-datasheet
+https://www.raspberrypi.com/documentation/computers/remote-access.html
